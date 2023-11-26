@@ -1,6 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { BsORM } from "../../BsORM";
-import { Form } from "@douyinfe/semi-ui";
+import { Form, Spin } from "@douyinfe/semi-ui";
 import { BaseFormProps } from "@douyinfe/semi-ui/lib/es/form";
 
 export const Context = createContext<{ orm?: BsORM }>({
@@ -27,7 +27,26 @@ export default function BProvide(props: BProvideProps) {
 
   return (
     <Context.Provider value={ctx}>
-      <Form {...props.formProps}>{init ? props.children : "loading"}</Form>
+      <Form {...props.formProps}>
+        {init ? (
+          props.children
+        ) : (
+          <div
+            style={{
+              height: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Spin size="large"></Spin>
+            <div style={{ fontSize: "14px", color: "#333", marginTop: "5px" }}>
+              初始化环境
+            </div>
+          </div>
+        )}
+      </Form>
     </Context.Provider>
   );
 }
