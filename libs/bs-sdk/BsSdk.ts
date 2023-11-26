@@ -39,8 +39,9 @@ export class BsSdk {
     }
   }
 
-  getRecordIds(table: ITable = this.activeTable!) {
-    return table.getRecordIdList();
+  async getRecordIds(table?: ITable) {
+    if (!table) table = await this.getActiveTable();
+    return await table.getRecordIdList();
   }
 
   async getRecordById(table: ITable, recordId: string) {

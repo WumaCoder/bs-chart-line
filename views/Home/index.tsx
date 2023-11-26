@@ -50,7 +50,7 @@ export default function Home() {
       echartRef
       // downloadFile(base64ToFile(url, Date.now() + ".png", "image/png"))
     );
-    if (Object.keys(conf.select).length === 0)
+    if (Object.keys(conf?.select || {}).length === 0)
       return Toast.error(t("toast-select-number-field"));
     let load = Toast.info({
       icon: <Spin />,
@@ -91,7 +91,7 @@ export default function Home() {
           ),
         ]);
       }
-    } else {
+    } else if (conf.output.type === "toField") {
       if (!recordId) {
         Toast.close(load);
         return Toast.error(t("toast-select-record"));
@@ -110,6 +110,12 @@ export default function Home() {
           base64ToFile(url, Date.now() + ".png", "image/png")
         ),
       ]);
+    } else {
+      if (!recordId) {
+        Toast.close(load);
+        return Toast.error(t("toast-select-record"));
+      }
+      await gene(recordId);
     }
     Toast.close(load);
     Toast.success(t("toast-gene-success"));
@@ -118,9 +124,11 @@ export default function Home() {
       const record = await orm.getRecord(recordId);
       const selectFieldRecord = conf.select.reduce(
         (map: any, fieldId: string) => {
-          if (record[fieldId] !== null) {
-            map[orm.getFieldsMap()?.get(fieldId)?.name as string] =
-              record[fieldId];
+          const v = Number(toDisplay(record[fieldId]));
+          // console.log("select", v, fieldId, record[fieldId]);
+
+          if (typeof v === "number" && v === v) {
+            map[orm.getFieldsMap()?.get(fieldId)?.name as string] = v;
           }
           return map;
         },
@@ -246,4 +254,14 @@ function createOption(params: any) {
       },
     ],
   };
+}
+
+function toDisplay(cell: any) {
+  return typeof cell === "object"
+    ? cell?.text ??
+        cell
+          ?.map?.((item: any) => item?.text ?? item?.name)
+          .filter((item: any) => item)
+          .join(",")
+    : cell;
 }
