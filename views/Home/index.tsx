@@ -50,10 +50,11 @@ export default function Home() {
       echartRef
       // downloadFile(base64ToFile(url, Date.now() + ".png", "image/png"))
     );
-    if (Object.keys(conf.select).length === 0) return Toast.error("请选择字段");
+    if (Object.keys(conf.select).length === 0)
+      return Toast.error(t("toast-select-number-field"));
     let load = Toast.info({
       icon: <Spin />,
-      content: "生成中...",
+      content: `${t("toast-gening")}...`,
       duration: 0,
     });
     let recordId = "";
@@ -67,12 +68,12 @@ export default function Home() {
 
     if (conf.output.type === "multiToField") {
       const recordIds = await bsSdk.getRecordIds();
-      if (!recordIds.length) return Toast.error("出现错误");
+      if (!recordIds.length) return Toast.error(t("toast-add-record"));
       for (let i = 0; i < recordIds.length; i++) {
         Toast.close(load);
         load = Toast.info({
           icon: <Spin />,
-          content: `生成中(${i + 1}/${recordIds.length})...`,
+          content: `${t("toast-gening")}(${i + 1}/${recordIds.length})...`,
           duration: 0,
         });
         const recordId = recordIds[i];
@@ -81,7 +82,7 @@ export default function Home() {
         const outfield = orm.getFieldsMap().get(conf.output.field);
         if ((await outfield?.getType()) !== FieldType.Attachment) {
           Toast.close(load);
-          return Toast.error("请选择附件字段");
+          return Toast.error(t("toast-select-field"));
         }
         outfield?.setValue(recordId, [
           await fileToIOpenAttachment(
@@ -93,7 +94,7 @@ export default function Home() {
     } else {
       if (!recordId) {
         Toast.close(load);
-        return Toast.error("请选择记录");
+        return Toast.error(t("toast-select-record"));
       }
 
       const url = await gene(recordId);
@@ -101,7 +102,7 @@ export default function Home() {
       const outfield = orm.getFieldsMap().get(conf.output.field);
       if ((await outfield?.getType()) !== FieldType.Attachment) {
         Toast.close(load);
-        return Toast.error("请选择附件字段");
+        return Toast.error(t("toast-select-field"));
       }
       outfield?.setValue(recordId, [
         await fileToIOpenAttachment(
@@ -111,7 +112,7 @@ export default function Home() {
       ]);
     }
     Toast.close(load);
-    Toast.success("生成成功");
+    Toast.success(t("toast-gene-success"));
 
     async function gene(recordId: string) {
       const record = await orm.getRecord(recordId);
@@ -153,53 +154,38 @@ export default function Home() {
           labelPosition: "left",
           initValues: conf,
         }}
+        loadingText={t("init")}
       >
-        <Section text={"字段配置"} style={{ marginTop: "10px" }}>
+        <Section text={t("field-conf")} style={{ marginTop: "10px" }}>
           <BSelectField
             field="select"
-            label="选择字段"
-            placeholder="选择字段"
+            label={t("select-field")}
+            placeholder={t("select-field-tip")}
             multiple
           ></BSelectField>
-          {/* <BSelectField
-            field="select[1]"
-            label="选择字段"
-            placeholder="选择字段"
-          ></BSelectField>
-          <BSelectField
-            field="select[2]"
-            label="选择字段"
-            placeholder="选择字段"
-          ></BSelectField>
-          <BSelectField
-            field="select[3]"
-            label="选择字段"
-            placeholder="选择字段"
-          ></BSelectField>
-          <BSelectField
-            field="select[4]"
-            label="选择字段"
-            placeholder="选择字段"
-          ></BSelectField> */}
         </Section>
-        <Section text={"输出配置"} style={{ marginTop: "10px" }}>
-          <Form.Select field="output.type" label="输出方式">
-            <Form.Select.Option value={"preview"}>预览</Form.Select.Option>
-            <Form.Select.Option value={"toField"}>生成到列</Form.Select.Option>
+        <Section text={t("output-conf")} style={{ marginTop: "10px" }}>
+          <Form.Select field="output.type" label={t("ouput-type")}>
+            <Form.Select.Option value={"preview"}>
+              {t("priview")}
+            </Form.Select.Option>
+            <Form.Select.Option value={"toField"}>
+              {t("gene-to-field")}
+            </Form.Select.Option>
             <Form.Select.Option value={"multiToField"}>
-              批量生成到列
+              {t("gene-multi-to-field")}
             </Form.Select.Option>
           </Form.Select>
           {conf?.output && conf?.output?.type !== "preview" && (
             <>
               <BSelectField
                 field="output.field"
-                label="输出字段"
-                placeholder="只支持附件字段"
+                label={t("output-field")}
+                placeholder={t("output-field-tip")}
               ></BSelectField>
               <Banner
                 type="danger"
-                description="注意：生成会直接覆盖指定字段内容"
+                description={t("output-field-danger")}
                 style={{ marginBottom: "10px" }}
               />
             </>
@@ -207,7 +193,7 @@ export default function Home() {
         </Section>
         <Space>
           <Button htmlType="submit" block type="primary">
-            生成
+            {t("btn-gene")}
           </Button>
         </Space>
         <div style={{ width: "100%", height: "400px" }}>

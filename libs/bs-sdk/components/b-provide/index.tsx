@@ -11,6 +11,7 @@ export type BProvideProps = {
   orm: BsORM;
   formProps?: BaseFormProps;
   children: JSX.Element | JSX.Element[];
+  loadingText?: string;
 };
 
 export default function BProvide(props: BProvideProps) {
@@ -42,7 +43,7 @@ export default function BProvide(props: BProvideProps) {
           >
             <Spin size="large"></Spin>
             <div style={{ fontSize: "14px", color: "#333", marginTop: "5px" }}>
-              初始化环境
+              {props.loadingText || "loading..."}
             </div>
           </div>
         )}

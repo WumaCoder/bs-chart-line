@@ -1,3 +1,22 @@
 {
-  "hello": "你好"
+  "hello": "你好",
+  "init": "初始化环境",
+  "field-conf": "字段配置",
+  "select-field": "选择字段",
+  "select-field-tip": "请选择数字字段",
+  "output-conf": "输出配置",
+  "ouput-type": "输出方式",
+  "priview": "预览",
+  "gene-to-field": "生成到列",
+  "gene-multi-to-field": "批量生成到列",
+  "output-field": "输出字段",
+  "output-field-tip": "只支持附件字段",
+  "output-field-danger": "注意：生成会直接覆盖指定字段内容",
+  "btn-gene": "生成",
+  "toast-gene-success": "生成成功",
+  "toast-select-record": "请选择记录",
+  "toast-select-field": "请选择附件字段",
+  "toast-gening": "生成中",
+  "toast-add-record": "请添加记录",
+  "toast-select-number-field": "请选择字段"
 }
