@@ -35,17 +35,18 @@ export default function Home() {
   const echartRef = useRef();
   const [conf, setConf] = useKeepState<any>({ output: { type: "preview" } });
 
-  console.log(conf);
+  // console.log(conf);
 
   useEffect(() => {
-    const clear = bsSdk.selectionChangeEmitter.on(async (e) => {
-      const { record, field } = await bsSdk.getSelectionQuery(e.data);
-      console.log("record", record);
-      console.log("field", field);
-      console.log(e);
-    });
-    return clear;
-  });
+    // const clear = bsSdk.selectionChangeEmitter.on(async (e) => {
+    //   const { record, field } = await bsSdk.getSelectionQuery(e.data);
+    //   console.log("record", record);
+    //   console.log("field", field);
+    //   console.log(e);
+    // });
+    // return clear;
+    console.log("useEffect");
+  }, []);
 
   const onSubmit = useCallback(async (conf: any) => {
     console.log(

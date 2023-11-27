@@ -17,14 +17,13 @@ export type BProvideProps = {
 export default function BProvide(props: BProvideProps) {
   const [ctx, setCtx] = useState({ orm: props.orm });
   const [init, setInit] = useState(false);
-
   useEffect(() => {
     const clear = props.orm.initEmitter.on(() => {
       console.log("init", props.orm);
       setInit(true);
     });
     return clear;
-  });
+  }, []);
 
   return (
     <Context.Provider value={ctx}>
