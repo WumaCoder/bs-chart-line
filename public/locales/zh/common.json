@@ -14,9 +14,10 @@
   "output-field-danger": "注意：生成会直接覆盖指定字段内容",
   "btn-gene": "生成",
   "toast-gene-success": "生成成功",
-  "toast-select-record": "请选择记录",
+  "toast-select-record": "请使用鼠标选择左边的记录",
   "toast-select-field": "请选择附件字段",
   "toast-gening": "生成中",
   "toast-add-record": "请添加记录",
-  "toast-select-number-field": "请选择字段"
+  "toast-select-number-field": "请选择字段",
+  "btn-help": "帮助"
 }

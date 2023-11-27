@@ -1,5 +1,6 @@
 "use client";
 import type { IOpenAttachment } from "@lark-base-open/js-sdk";
+import { useEffect, useState } from "react";
 
 export async function fileToIOpenAttachment(
   base: any,
@@ -163,4 +164,47 @@ export function splitFilename(url: string) {
   const idx2 = url.lastIndexOf("?");
   const name = url.slice(idx + 1, idx2 === -1 ? undefined : idx2);
   return name;
+}
+
+let isInit = new Map();
+const initState = (key: string, state: any) => {
+  if (isInit.has(key)) {
+    return isInit.get(key);
+  }
+  const saved = localStorage.getItem(key);
+  const init = saved ? JSON.parse(saved) : state;
+  isInit.set(key, init);
+  return init;
+};
+
+export function useKeepState<T>(state: T, id = "default") {
+  const key = `keep-state-${id}`;
+  const [data, setData] = useState(initState(key, state));
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(data));
+  }, [data, key]);
+
+  return [data, setData] as const;
+}
+
+export function useDynKeep<T>(state: T) {
+  const [data, setData] = useState(state);
+
+  useEffect(() => {
+    setData(state);
+  }, [state]);
+
+  const save = (id: string) => {
+    localStorage.setItem(id, JSON.stringify(data));
+  };
+
+  const load = (id: string) => {
+    const saved = localStorage.getItem(id);
+    if (saved) {
+      setData(JSON.parse(saved));
+    }
+  };
+
+  return [data, setData, load, save] as const;
 }

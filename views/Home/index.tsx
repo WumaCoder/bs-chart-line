@@ -12,6 +12,7 @@ import {
   base64ToFile,
   downloadFile,
   fileToIOpenAttachment,
+  useKeepState,
 } from "@/libs/bs-sdk/shared";
 import { FieldType } from "@lark-base-open/js-sdk";
 
@@ -32,7 +33,9 @@ export default function Home() {
     })
   );
   const echartRef = useRef();
-  const [conf, setConf] = useState<any>({ output: { type: "preview" } });
+  const [conf, setConf] = useKeepState<any>({ output: { type: "preview" } });
+
+  console.log(conf);
 
   useEffect(() => {
     const clear = bsSdk.selectionChangeEmitter.on(async (e) => {
@@ -62,7 +65,15 @@ export default function Home() {
       const select = await bsSdk.getSelection();
       console.log({ select });
 
-      recordId = select.recordId as string;
+      if (select.recordId) {
+        recordId = select.recordId as string;
+      } else {
+        if (conf?.output?.type === "preview") {
+          recordId = await (await bsSdk.getActiveTable())
+            .getRecords({ pageSize: 1 })
+            .then((res) => res.records[0].recordId);
+        }
+      }
     }
     console.log({ recordId });
 
@@ -152,9 +163,17 @@ export default function Home() {
     }
   }, []);
 
-  const onChange = useCallback((e: any) => {
-    setConf({ ...e.values });
-  }, []);
+  const onChange = useCallback(
+    (e: any) => {
+      // console.log("onChange", e);
+
+      setConf({
+        ...e.values,
+        output: Object.assign({}, conf?.output, e.values?.output),
+      });
+    },
+    [conf, setConf]
+  );
 
   return (
     <main className={styles.main}>
@@ -206,6 +225,12 @@ export default function Home() {
         <Space>
           <Button htmlType="submit" block type="primary">
             {t("btn-gene")}
+          </Button>
+          <Button
+            block
+            onClick={() => open("https://zhuanlan.zhihu.com/p/669107200")}
+          >
+            {t("btn-help")}
           </Button>
         </Space>
         <div style={{ width: "400px", height: "400px" }}>

@@ -14,9 +14,10 @@
   "output-field-danger": "Note: Generation will directly overwrite specified field content",
   "btn-gene": "Generate",
   "toast-gene-success": "Generation successful",
-  "toast-select-record": "Please select a record",
+  "toast-select-record": "Please use your mouse to select the record on the left",
   "toast-select-field": "Please select attachment field",
   "toast-gening": "Generating...",
   "toast-add-record": "Please add a record",
-  "toast-select-number-field": "Please select a field"
+  "toast-select-number-field": "Please select a field",
+  "btn-help": "help"
 }
