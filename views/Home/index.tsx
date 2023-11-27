@@ -124,7 +124,11 @@ export default function Home() {
       const record = await orm.getRecord(recordId);
       const selectFieldRecord = conf.select.reduce(
         (map: any, fieldId: string) => {
-          const v = Number(toDisplay(record[fieldId]));
+          let v = toDisplay(record[fieldId]);
+          if (!v) {
+            v = 0;
+          }
+          v = Number(v);
           // console.log("select", v, fieldId, record[fieldId]);
 
           if (typeof v === "number" && v === v) {
@@ -204,7 +208,7 @@ export default function Home() {
             {t("btn-gene")}
           </Button>
         </Space>
-        <div style={{ width: "100%", height: "400px" }}>
+        <div style={{ width: "400px", height: "400px" }}>
           <ECharts refInstance={echartRef} option={option}></ECharts>
         </div>
       </BProvide>
@@ -223,7 +227,7 @@ function createOption(params: any) {
     //   data: ["Allocated Budget", "Actual Spending"],
     // },
     textStyle: {
-      fontSize: 18,
+      fontSize: 16,
     },
     radar: {
       // shape: 'circle',
@@ -239,6 +243,8 @@ function createOption(params: any) {
       axisName: {
         color: "#5470c6",
       },
+      center: ["50%", "50%"], // 将雷达图居中显示
+      radius: "60%", // 设置雷达图的半径为容器高度的70%
     },
     series: [
       {
