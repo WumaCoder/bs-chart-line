@@ -219,8 +219,11 @@ function createOption(params: any) {
     // title: {
     //   text: "Basic Radar Chart",
     // },
-    legend: {
-      data: ["Allocated Budget", "Actual Spending"],
+    // legend: {
+    //   data: ["Allocated Budget", "Actual Spending"],
+    // },
+    textStyle: {
+      fontSize: 18,
     },
     radar: {
       // shape: 'circle',
@@ -233,6 +236,9 @@ function createOption(params: any) {
       //   { name: "Marketing" },
       // ],
       indicator: keys.map((key) => ({ name: key })),
+      axisName: {
+        color: "#5470c6",
+      },
     },
     series: [
       {
@@ -241,6 +247,9 @@ function createOption(params: any) {
         data: [
           {
             value: keys.map((key) => params[key]),
+            areaStyle: {
+              color: "rgba(66, 139, 212, 0.3)",
+            },
             // name: "Allocated Budget",
           },
           // {
