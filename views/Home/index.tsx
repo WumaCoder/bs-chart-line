@@ -215,6 +215,7 @@ export default function Home() {
 function createOption(params: any) {
   const keys = Object.keys(params);
   return {
+    animation: false,
     // title: {
     //   text: "Basic Radar Chart",
     // },
