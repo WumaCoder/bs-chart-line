@@ -28,17 +28,17 @@ export default function Home() {
   const [option, setOption] = useState<any>(
     createOption(
       {
-        A: 10,
-        B: 10,
-        C: 10,
+        A: 7,
+        B: 8,
+        C: 9,
       },
-      { max: 10, min: 0 }
+      { output: { type: "preview" }, chart: { type: "line", order: "default" } }
     )
   );
   const echartRef = useRef();
   const [conf, setConf] = useKeepState<any>({
     output: { type: "preview" },
-    chart: { max: 10, min: 0 },
+    chart: { type: "line", order: "default" },
   });
 
   // console.log(conf);
@@ -217,21 +217,21 @@ export default function Home() {
 
           <Form.Select
             field="chart.type"
-            label="图表类型"
+            label={t("chart-conf-type")}
             optionList={[
-              { label: "折线图", value: "line" },
-              { label: "柱状图", value: "bar" },
+              { label: t("chart-conf-line"), value: "line" },
+              { label: t("chart-conf-bar"), value: "bar" },
             ]}
           ></Form.Select>
 
           <Form.Select
             field="chart.order"
-            label="字段排序"
+            label={t("chart-conf-order")}
             optionList={[
-              { label: "默认", value: "default" },
-              { label: "升序", value: "asc" },
+              { label: t("chart-conf-default"), value: "default" },
+              { label: t("chart-conf-asc"), value: "asc" },
               {
-                label: "降序",
+                label: t("chart-conf-desc"),
                 value: "desc",
               },
             ]}

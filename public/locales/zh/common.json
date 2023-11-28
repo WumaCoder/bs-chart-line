@@ -22,5 +22,12 @@
   "chart-conf": "图表配置",
   "chart-conf-max": "最大值",
   "chart-conf-min": "最小值",
-  "output-type": "输出方式"
+  "output-type": "输出方式",
+  "chart-conf-type": "图表类型",
+  "chart-conf-line": "折线图",
+  "chart-conf-bar": "柱状图",
+  "chart-conf-order": "字段排序",
+  "chart-conf-default": "默认",
+  "chart-conf-asc": "升序",
+  "chart-conf-desc": "降序"
 }

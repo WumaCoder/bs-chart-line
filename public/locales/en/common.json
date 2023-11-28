@@ -21,5 +21,12 @@
   "btn-help": "help",
   "chart-conf-min": "minimum value",
   "chart-conf-max": "maximum value",
-  "output-type": "Output Type"
+  "output-type": "Output Type",
+  "chart-conf-type": "chart type",
+  "chart-conf-line": "line chart",
+  "chart-conf-bar": "bar chart",
+  "chart-conf-order": "Field sorting",
+  "chart-conf-default": "default",
+  "chart-conf-desc": "descending order",
+  "chart-conf-asc": "Ascending order"
 }
