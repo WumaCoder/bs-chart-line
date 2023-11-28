@@ -212,6 +212,7 @@ export default function Home() {
             <>
               <BSelectField
                 field="output.field"
+                filterOption={(field) => field?.type === FieldType.Attachment}
                 label={t("output-field")}
                 placeholder={t("output-field-tip")}
               ></BSelectField>
