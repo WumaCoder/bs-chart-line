@@ -24,7 +24,7 @@ const bsSdk = new BsSdk({
 const orm = new BsORM(bsSdk);
 
 export default function Home() {
-  const [t] = useTranslation();
+  const [t, i18n] = useTranslation();
   const [option, setOption] = useState<any>(
     createOption(
       {
@@ -52,6 +52,9 @@ export default function Home() {
     // });
     // return clear;
     console.log("useEffect");
+    bsSdk.bitable.bridge.getLanguage().then((lang) => {
+      i18n.changeLanguage(lang.includes("zh") ? "zh" : "en");
+    });
   }, []);
 
   const onSubmit = useCallback(async (conf: any) => {
