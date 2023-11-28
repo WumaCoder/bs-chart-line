@@ -206,14 +206,36 @@ export default function Home() {
           ></BSelectField>
         </Section>
         <Section text={t("chart-conf")} style={{ marginTop: "10px" }}>
-          <Form.InputNumber
+          {/* <Form.InputNumber
             field="chart.max"
             label={t("chart-conf-max")}
           ></Form.InputNumber>
           <Form.InputNumber
             field="chart.min"
             label={t("chart-conf-min")}
-          ></Form.InputNumber>
+          ></Form.InputNumber> */}
+
+          <Form.Select
+            field="chart.type"
+            label="图表类型"
+            optionList={[
+              { label: "折线图", value: "line" },
+              { label: "柱状图", value: "bar" },
+            ]}
+          ></Form.Select>
+
+          <Form.Select
+            field="chart.order"
+            label="字段排序"
+            optionList={[
+              { label: "默认", value: "default" },
+              { label: "升序", value: "asc" },
+              {
+                label: "降序",
+                value: "desc",
+              },
+            ]}
+          ></Form.Select>
         </Section>
         <Section text={t("output-conf")} style={{ marginTop: "10px" }}>
           <Form.Select field="output.type" label={t("output-type")}>
@@ -255,7 +277,12 @@ export default function Home() {
           </Button>
         </Space>
         <div style={{ width: "100%", overflow: "scroll" }}>
-          <div style={{ width: "500px", height: "500px" }}>
+          <div
+            style={{
+              width: `${(option?.meta?.keys.length ?? 0) * 100 + 100}px`,
+              height: "500px",
+            }}
+          >
             <ECharts refInstance={echartRef} option={option}></ECharts>
           </div>
         </div>
@@ -264,72 +291,58 @@ export default function Home() {
   );
 }
 
-function createOption(params: any, opt: any) {
-  const keys = Object.keys(params);
-  const maxKeyLen = Math.max(...keys.map((key) => key.length));
-  return {
-    animation: false,
-    // title: {
-    //   text: "Basic Radar Chart",
-    // },
-    // legend: {
-    //   data: ["Allocated Budget", "Actual Spending"],
-    // },
-    textStyle: {
-      fontSize: 16,
-    },
-    radar: {
-      // shape: 'circle',
-      // indicator: [
-      //   { name: "Sales" },
-      //   { name: "Administration" },
-      //   { name: "Information Technology" },
-      //   { name: "Customer Support" },
-      //   { name: "Development" },
-      //   { name: "Marketing" },
-      // ],
-      indicator: keys.map((key) => ({
-        name: key,
-        max: opt.max,
-        min: opt.min,
-        // key.length > 6
-        //   ? key.slice(0, 6) + "\n" + key.slice(6, key.length)
-        //   : key,
-      })),
-      axisName: {
-        color: "#5470c6",
-      },
-      center: ["50%", "50%"], // 将雷达图居中显示
-      radius: maxKeyLen > 5 ? "50%" : maxKeyLen > 4 ? "60%" : "70%", // 设置雷达图的半径为容器高度的70%
-    },
-    series: [
+function createOption(data: any, opt: any) {
+  let keys = Object.keys(data);
+  if (opt.order === "asc" || opt.order === "desc") {
+    keys = extractAndSortNumbers(keys);
+    if (opt.order === "desc") {
+      keys = keys.reverse();
+    }
+  }
+  return (
+    (
       {
-        name: "Budget vs spending",
-        type: "radar",
-        data: [
-          {
-            value: keys.map((key) => params[key]),
-            areaStyle: {
-              color: "rgba(66, 139, 212, 0.3)",
+        get line() {
+          return {
+            meta: { data, opt, keys },
+            animation: false,
+            xAxis: {
+              type: "category",
+              data: keys,
             },
-            label: {
-              show: true,
-              position: "inside",
+            yAxis: {
+              type: "value",
             },
-            // name: "Allocated Budget",
-          },
-          // {
-          //   value: [4200, 3000, 20000, 35000, 50000, 18000],
-          //   name: "Allocated Budget",
-          // },
-          // {
-          //   value: [5000, 14000, 28000, 26000, 42000, 21000],
-          //   name: "Actual Spending",
-          // },
-        ],
-      },
-    ],
-  };
+            series: [
+              {
+                data: keys.map((key) => data[key]),
+                type: "line",
+              },
+            ],
+          };
+        },
+        get bar() {
+          return {
+            meta: { data, opt, keys },
+            animation: false,
+            xAxis: {
+              type: "category",
+              data: keys,
+            },
+            yAxis: {
+              type: "value",
+            },
+            series: [
+              {
+                data: keys.map((key) => data[key]),
+                type: "bar",
+              },
+            ],
+          };
+        },
+      } as any
+    )[opt.type] || {}
+  );
 }
 
 function toDisplay(cell: any) {
@@ -340,4 +353,74 @@ function toDisplay(cell: any) {
           .filter((item: any) => item)
           .join(",")
     : cell;
+}
+
+function extractAndSortNumbers(strings: any[]) {
+  // 定义中文数字映射
+  const chineseNumberMap: any = {
+    零: 0,
+    一: 1,
+    二: 2,
+    三: 3,
+    四: 4,
+    五: 5,
+    六: 6,
+    七: 7,
+    八: 8,
+    九: 9,
+    十: 10,
+    百: 100,
+    千: 1000,
+    万: 10000,
+    亿: 100000000,
+  };
+
+  // 中文数字转阿拉伯数字
+  function chineseToNumber(chineseStr: string) {
+    let total = 0;
+    let temp = 0;
+    let prevUnit = 1;
+
+    for (const char of chineseStr.split("")) {
+      let value = chineseNumberMap[char];
+      if (value < 10) {
+        temp = value;
+      } else {
+        if (temp === 0) temp = 1;
+        if (value > prevUnit) {
+          total += temp;
+          total *= value;
+          temp = 0;
+        } else {
+          total += temp * value;
+        }
+        prevUnit = value;
+        temp = 0;
+      }
+    }
+    return total + temp;
+  }
+
+  // 提取数字并映射为数字值的函数
+  function extractNumber(str: string) {
+    const numberPattern = /(\d+|[零一二三四五六七八九十百千万亿]+)/g;
+    const matches = str.match(numberPattern);
+    if (!matches) return 0;
+
+    return matches.reduce((sum: number, match: string) => {
+      return (
+        sum + (isNaN(Number(match)) ? chineseToNumber(match) : Number(match))
+      );
+    }, 0);
+  }
+
+  // 排序函数，将包含数字的词进行排序
+  function sortWithNumbers(a: any, b: any) {
+    const numA = extractNumber(a);
+    const numB = extractNumber(b);
+    return numA - numB;
+  }
+
+  // 使用排序函数对字符串数组进行排序
+  return strings.slice().sort(sortWithNumbers);
 }
