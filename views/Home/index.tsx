@@ -26,14 +26,20 @@ const orm = new BsORM(bsSdk);
 export default function Home() {
   const [t] = useTranslation();
   const [option, setOption] = useState<any>(
-    createOption({
-      A: 10,
-      B: 10,
-      C: 10,
-    })
+    createOption(
+      {
+        A: 10,
+        B: 10,
+        C: 10,
+      },
+      { max: 10, min: 0 }
+    )
   );
   const echartRef = useRef();
-  const [conf, setConf] = useKeepState<any>({ output: { type: "preview" } });
+  const [conf, setConf] = useKeepState<any>({
+    output: { type: "preview" },
+    chart: { max: 10, min: 0 },
+  });
 
   // console.log(conf);
 
@@ -155,7 +161,7 @@ export default function Home() {
         return;
       }
 
-      setOption(createOption(selectFieldRecord));
+      setOption(createOption(selectFieldRecord, conf?.chart));
       console.log(record, selectFieldRecord);
 
       await new Promise((resolve) => setTimeout(resolve, 1));
@@ -196,8 +202,18 @@ export default function Home() {
             multiple
           ></BSelectField>
         </Section>
+        <Section text={t("chart-conf")} style={{ marginTop: "10px" }}>
+          <Form.InputNumber
+            field="chart.max"
+            label={t("chart-conf-max")}
+          ></Form.InputNumber>
+          <Form.InputNumber
+            field="chart.min"
+            label={t("chart-conf-min")}
+          ></Form.InputNumber>
+        </Section>
         <Section text={t("output-conf")} style={{ marginTop: "10px" }}>
-          <Form.Select field="output.type" label={t("ouput-type")}>
+          <Form.Select field="output.type" label={t("output-type")}>
             <Form.Select.Option value={"preview"}>
               {t("priview")}
             </Form.Select.Option>
@@ -245,7 +261,7 @@ export default function Home() {
   );
 }
 
-function createOption(params: any) {
+function createOption(params: any, opt: any) {
   const keys = Object.keys(params);
   const maxKeyLen = Math.max(...keys.map((key) => key.length));
   return {
@@ -271,6 +287,8 @@ function createOption(params: any) {
       // ],
       indicator: keys.map((key) => ({
         name: key,
+        max: opt.max,
+        min: opt.min,
         // key.length > 6
         //   ? key.slice(0, 6) + "\n" + key.slice(6, key.length)
         //   : key,

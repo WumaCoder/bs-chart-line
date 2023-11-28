@@ -5,7 +5,6 @@
   "select-field": "选择字段",
   "select-field-tip": "请选择数字字段",
   "output-conf": "输出配置",
-  "ouput-type": "输出方式",
   "priview": "预览",
   "gene-to-field": "生成到列",
   "gene-multi-to-field": "批量生成到列",
@@ -19,5 +18,9 @@
   "toast-gening": "生成中",
   "toast-add-record": "请添加记录",
   "toast-select-number-field": "请选择字段",
-  "btn-help": "帮助"
+  "btn-help": "帮助",
+  "chart-conf": "图表配置",
+  "chart-conf-max": "最大值",
+  "chart-conf-min": "最小值",
+  "output-type": "输出方式"
 }

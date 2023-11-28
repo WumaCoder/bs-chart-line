@@ -5,7 +5,6 @@
   "select-field": "Select Field",
   "select-field-tip": "Please select a numeric field",
   "output-conf": "Output Configuration",
-  "ouput-type": "Output Type",
   "priview": "Preview",
   "gene-to-field": "Generate to Column",
   "gene-multi-to-field": "Generate to Multiple Columns",
@@ -19,5 +18,8 @@
   "toast-gening": "Generating...",
   "toast-add-record": "Please add a record",
   "toast-select-number-field": "Please select a field",
-  "btn-help": "help"
+  "btn-help": "help",
+  "chart-conf-min": "minimum value",
+  "chart-conf-max": "maximum value",
+  "output-type": "Output Type"
 }
