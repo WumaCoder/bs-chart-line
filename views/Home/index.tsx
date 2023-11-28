@@ -234,8 +234,10 @@ export default function Home() {
             {t("btn-help")}
           </Button>
         </Space>
-        <div style={{ width: "400px", height: "400px" }}>
-          <ECharts refInstance={echartRef} option={option}></ECharts>
+        <div style={{ width: "100%", overflow: "scroll" }}>
+          <div style={{ width: "500px", height: "500px" }}>
+            <ECharts refInstance={echartRef} option={option}></ECharts>
+          </div>
         </div>
       </BProvide>
     </main>
@@ -244,6 +246,7 @@ export default function Home() {
 
 function createOption(params: any) {
   const keys = Object.keys(params);
+  const maxKeyLen = Math.max(...keys.map((key) => key.length));
   return {
     animation: false,
     // title: {
@@ -265,12 +268,17 @@ function createOption(params: any) {
       //   { name: "Development" },
       //   { name: "Marketing" },
       // ],
-      indicator: keys.map((key) => ({ name: key })),
+      indicator: keys.map((key) => ({
+        name: key,
+        // key.length > 6
+        //   ? key.slice(0, 6) + "\n" + key.slice(6, key.length)
+        //   : key,
+      })),
       axisName: {
         color: "#5470c6",
       },
       center: ["50%", "50%"], // 将雷达图居中显示
-      radius: "60%", // 设置雷达图的半径为容器高度的70%
+      radius: maxKeyLen > 5 ? "50%" : maxKeyLen > 4 ? "60%" : "70%", // 设置雷达图的半径为容器高度的70%
     },
     series: [
       {
@@ -281,6 +289,10 @@ function createOption(params: any) {
             value: keys.map((key) => params[key]),
             areaStyle: {
               color: "rgba(66, 139, 212, 0.3)",
+            },
+            label: {
+              show: true,
+              position: "inside",
             },
             // name: "Allocated Budget",
           },
